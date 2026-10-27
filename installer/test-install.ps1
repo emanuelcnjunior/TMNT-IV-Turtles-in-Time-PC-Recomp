@@ -2,7 +2,7 @@
 param([Parameter(Mandatory=$true)][string]$Rom)
 $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
-$setup = Join-Path $root 'dist/TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.0.exe'
+$setup = Join-Path $root 'dist/TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.2.exe'
 $install = Join-Path $root ('build/install-test-' + [guid]::NewGuid().ToString('N'))
 $data = Join-Path $env:LOCALAPPDATA 'TMNTIVRecomp'
 if (Test-Path $data) { throw 'Use a fresh Windows test account. Existing user data will not be altered.' }

@@ -1,6 +1,6 @@
-# Windows release 1.0.0
+# Windows release 1.0.2
 
-O jogador baixa apenas `TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.0.exe`.
+O jogador baixa apenas `TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.2.exe`.
 Windows 10 1903 ou posterior, x64, com driver gráfico OpenGL compatível com o jogo.
 O instalador não baixa ROMs nem exige ferramentas de desenvolvimento.
 O instalador informa que o jogador deve fornecer sua própria ROM americana.
@@ -58,7 +58,7 @@ O teste de região usa conteúdo sintético com região alterada; complemente co
 uma ROM real de outra região, obtida legalmente, na homologação.
 
 O script exige build Release jogável (`SNESRECOMP_SETUP_HOST=OFF`), compila com
-`TMNT_RETAIL_WINDOWS=ON`, versão 1.0.0, coleta as dependências PE recursivas e
+`TMNT_RETAIL_WINDOWS=ON`, versão 1.0.2, coleta as dependências PE recursivas e
 falha se faltar uma dependência ou recurso obrigatório. Copia o CRT redistribuível
 x64 app-local, inclusive quando a máquina de build já possui essas DLLs no Windows.
 O UCRT e DLLs do sistema são fornecidos pelo Windows mínimo suportado.
@@ -73,7 +73,7 @@ a resolução PE deve localizar sua DLL ou o empacotamento falha.
 O `manifest.json` no instalador registra tamanho e SHA-256 de cada arquivo do payload.
 As licenças e os avisos dos recursos acompanham o programa.
 
-Saídas: `dist/TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.0.exe` e `.exe.sha256`.
+Saídas: `dist/TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.2.exe` e `.exe.sha256`.
 Reprodução significa repetir o processo com fontes, configurações e ferramentas
 iguais; não há garantia de EXE byte a byte idêntico (timestamps e assinatura).
 Não use `scripts/package_release.sh` para esta distribuição Windows: ele produz
@@ -81,26 +81,9 @@ um pacote de desenvolvimento antigo que exige compilação na máquina do jogado
 
 ## Publicar no GitHub
 
-1. Execute os testes em conta de teste e também numa VM Windows limpa, sem VS,
-   Python, CMake, Rust ou Git. Verifique seleção pelo diálogo, erro bilíngue,
-   atalho no Menu Iniciar, Área de Trabalho opcional e remoção do programa.
-2. Confira o manifesto: nenhuma ROM, dado extraído, BIOS ou patch protegido.
-   Confira versão, licença do CRT e licenças dos componentes usados.
-3. Registre commit principal e commits dos submódulos, versões de MSVC, SDK,
-   CMake, Ninja e Inno Setup nas notas da release. Preserve os logs de build/teste
-   privadamente; não anexe dumps, caminhos pessoais ou ROMs.
-4. Opcionalmente assine o instalador com Authenticode e carimbo de tempo; gere
-   novamente o `.sha256` **depois** de assinar.
-5. Crie um tag `v1.0.0` no commit revisado e uma release inicialmente em rascunho:
+1. Gere o instalador em Release e confira o manifesto, o checksum e a ausência de ROM ou dados extraídos.
+2. Atualize `downloads/v1.0.2/`, `installer/RELEASE-v1.0.2.md` e o workflow `publish-approved-release-v1.0.2.yml` com o hash aprovado.
+3. Faça commit dessas alterações e envie `main` para `origin`. O GitHub Actions valida os bytes, cria a tag e publica a release v1.0.2 como Latest.
 
-```powershell
-git tag v1.0.0
-git push origin v1.0.0
-gh release create v1.0.0 --draft --title 'TMNT IV PC Recomp v1.0.0' --notes-file installer/release-notes.md dist/TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.0.exe dist/TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.0.exe.sha256
-```
-
-Revise os dois anexos e publique o rascunho pela interface do GitHub.
-Não envie o stage, a árvore de build ou a ROM. Não há ROM em secrets de CI nem
-qualquer download de ROM na distribuição.
-
+Não envie o stage, a árvore de build ou qualquer ROM. Não há ROM em secrets de CI nem download de ROM na distribuição.
 Instalação silenciosa também exige a ROM: /ROM="C:\caminho\jogo.sfc".

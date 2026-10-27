@@ -8,9 +8,9 @@ O projeto recria o jogo para Windows e oferece modo cooperativo local para dois 
 
 ## Instalador para Windows
 
-[**Baixar o instalador Windows v1.0.1 — Save Game**](https://github.com/emanuelcnjunior/TMNT-IV-Turtles-in-Time-PC-Recomp/releases/download/v1.0.1/TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.1.exe)
+[**Baixar o instalador Windows v1.0.2 — Hotkeys e Save Game**](https://github.com/emanuelcnjunior/TMNT-IV-Turtles-in-Time-PC-Recomp/releases/download/v1.0.2/TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.2.exe)
 
-Consulte as [notas e o checksum da versão 1.0.1](installer/RELEASE-v1.0.1.md). A interface completa de gerenciamento de saves no launcher ainda está parcial. A versão anterior [v1.0.0](https://github.com/emanuelcnjunior/TMNT-IV-Turtles-in-Time-PC-Recomp/releases/tag/v1.0.0) continua disponível.
+Consulte as [notas e o checksum da versão 1.0.2](installer/RELEASE-v1.0.2.md). A [v1.0.1](https://github.com/emanuelcnjunior/TMNT-IV-Turtles-in-Time-PC-Recomp/releases/tag/v1.0.1) e a [v1.0.0](https://github.com/emanuelcnjunior/TMNT-IV-Turtles-in-Time-PC-Recomp/releases/tag/v1.0.0) continuam disponíveis.
 
 O instalador requer Windows 10 1903 ou superior, 64 bits, e uma ROM USA original do usuário. A ROM não acompanha o instalador; o assistente de instalação valida e importa o arquivo selecionado.
 

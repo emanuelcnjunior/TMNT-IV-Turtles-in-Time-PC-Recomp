@@ -5,7 +5,7 @@
 #define OutputDir "..\dist"
 #endif
 #ifndef ReleaseVersion
-#define ReleaseVersion "1.0.0"
+#define ReleaseVersion "1.0.2"
 #endif
 [Setup]
 AppId={{D31700C9-4DD9-49E3-B1CF-A83C60969E40}
