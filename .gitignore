@@ -6,6 +6,9 @@
 *.sfc
 *.smc
 *.srm
+*.state
+*.state.thumb
+/save-test-output/
 
 # Build trees and packaged output
 /build/
