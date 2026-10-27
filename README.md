@@ -48,6 +48,10 @@ Os estados possuem verificações de integridade e compatibilidade. **Uma atuali
 
 ### 🖼️ Modo Clássico e modo HD
 
+| Modo Clássico | Modo HD (Scale2x) |
+|:---:|:---:|
+| ![Jogo no modo Clássico](docs/screenshots/classic.png) | ![Jogo no modo HD com Scale2x](docs/screenshots/hd.png) |
+
 As capturas de gameplay mostram a mesma fase do jogo com duas apresentações visuais selecionáveis, **sem alterar personagens, colisões ou a jogabilidade original**:
 
 - **Clássico / Original:** mantém os pixels e a estética do SNES, ideal para jogar com a apresentação tradicional.
@@ -55,6 +59,8 @@ As capturas de gameplay mostram a mesma fase do jogo com duas apresentações vi
 - **Alternância imediata:** pressione **F6** no teclado ou **Start** no controle; o Start também continua funcionando dentro do jogo.
 
 #### Menu de configurações gráficas (F10)
+
+![Menu de configurações gráficas do TMNT IV](docs/screenshots/graphic%20config.png)
 
 O menu exibido nas capturas apresenta opções para **Modo Original/HD**, **Filtro (Scale2x)**, **resolução de saída** (por exemplo, 1920 × 1080), **escala**, **proporção 4:3**, **VSync**, **tela cheia**, **HD Pack**, **recarregamento** e **diagnóstico de IDs**.
 
@@ -66,6 +72,8 @@ O menu exibido nas capturas apresenta opções para **Modo Original/HD**, **Filt
 **Importante:** o modo HD atual é um aprimoramento de apresentação/upscale, **não uma remasterização completa das texturas, sprites e backgrounds**. Pacotes opcionais precisam usar arte autoral ou devidamente licenciada.
 
 ### 💾 Tela de Save States
+
+![Tela de Save States com miniatura e slots disponíveis](docs/screenshots/save%20states.png)
 
 A captura da interface mostra uma lista visual de **seis posições: cinco slots manuais e um Quick Save**, com miniatura do jogo, data/hora e indicação de slots vazios (**NEW SLOT**). A navegação foi projetada para teclado e controles.
 
