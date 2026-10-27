@@ -3,6 +3,8 @@ param(
  [string]$BuildDir = 'build',
  [string]$Iscc = 'ISCC.exe',
  [string]$CrtDir = '',
+ [ValidatePattern('^[0-9]+\.[0-9]+\.[0-9]+([.-][A-Za-z0-9.-]+)?$')]
+ [string]$Version = '1.0.0',
  [switch]$SkipBuild
 )
 $ErrorActionPreference = 'Stop'
@@ -21,7 +23,7 @@ function Invoke-Native([string]$Program, [string[]]$Arguments) {
  if ($code -ne 0) { throw "$Program failed: $code" }
 }
 if (!$SkipBuild) {
- Invoke-Native cmake @('-S',$root,'-B',$build,'-DCMAKE_BUILD_TYPE=Release','-DTMNT_RETAIL_WINDOWS=ON','-DSNESRECOMP_SETUP_HOST=OFF','-DSNESRECOMP_BUILD_VERSION=1.0.0')
+ Invoke-Native cmake @('-S',$root,'-B',$build,'-DCMAKE_BUILD_TYPE=Release','-DTMNT_RETAIL_WINDOWS=ON','-DSNESRECOMP_SETUP_HOST=OFF',"-DSNESRECOMP_BUILD_VERSION=$Version")
  Invoke-Native cmake @('--build',$build,'--config','Release','--parallel')
 }
 $cache = Get-Content (Join-Path $build 'CMakeCache.txt') -Raw
@@ -77,7 +79,7 @@ $manifest = Get-ChildItem $stage -File -Recurse | ForEach-Object {
  [ordered]@{ path=$_.FullName.Substring($stage.Length+1); bytes=$_.Length; sha256=(Get-FileHash $_.FullName -Algorithm SHA256).Hash }
 }
 $manifest | ConvertTo-Json | Set-Content -Encoding UTF8 (Join-Path $stage 'manifest.json')
-Invoke-Native $Iscc @("/DStageDir=$stage", "/DOutputDir=$(Join-Path $root 'dist')", 'installer/tmnt.iss')
-$setup = Join-Path $root 'dist/TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.0.exe'
+Invoke-Native $Iscc @("/DStageDir=$stage", "/DOutputDir=$(Join-Path $root 'dist')", "/DReleaseVersion=$Version", 'installer/tmnt.iss')
+$setup = Join-Path $root "dist/TMNT-IV-Turtles-in-Time-PC-Setup-v$Version.exe"
 (Get-FileHash $setup -Algorithm SHA256).Hash + '  ' + (Split-Path $setup -Leaf) | Set-Content ($setup + '.sha256')
 Write-Output $setup

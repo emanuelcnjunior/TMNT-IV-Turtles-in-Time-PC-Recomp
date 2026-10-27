@@ -129,8 +129,9 @@ these commands; the legacy numbered Load/Save lists are inactive in this profile
 
 These states are tied to the ROM and runtime schema. See the
 [validation report](SAVE-GAME-REPORT.md) for proven restoration tests and the
-remaining Release, installed-executable and Windows-reboot checks. The installer
-has not been changed for this feature.
+remaining clean Release, installed-executable and Windows-reboot checks. A
+separately named `1.0.1-savegame-test.1` installer is available locally for
+validation; the stable v1.0.0 package is preserved.
 
 ## License
 
