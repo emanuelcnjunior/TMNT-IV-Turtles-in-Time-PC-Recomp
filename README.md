@@ -13,6 +13,10 @@ Native PC recompilation of Teenage Mutant Ninja Turtles IV: Turtles in Time (SNE
 
 ## Windows installer
 
+Save-game build approved for testing: [**Windows installer v1.0.1**](https://github.com/emanuelcnjunior/TMNT-IV-Turtles-in-Time-PC-Recomp/raw/refs/heads/feature/save-game/downloads/v1.0.1/TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.1.exe).
+See [v1.0.1 notes and checksum](installer/RELEASE-v1.0.1.md). The save UI Stage 2
+remains partial; this package contains the executable approved by the user.
+
 [**Download the Windows installer (v1.0.0)**](https://github.com/emanuelcnjunior/TMNT-IV-Turtles-in-Time-PC-Recomp/releases/download/v1.0.0/TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.0.exe)
 
 Requires Windows 10 1903+ x64 and your own original USA ROM, selected during
