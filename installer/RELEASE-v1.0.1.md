@@ -31,6 +31,7 @@ A Etapa 2 continua parcial: localização PT/EN, exclusão confirmada, classific
 visual de saves inválidos e integração ao launcher permanecem pendentes,
 conforme `SAVE-UI-AUDIT.md`. A versão 1.0.0 e seu instalador foram preservados.
 
-O instalador e o checksum ficam no repositório porque o conector disponível não
-oferece upload de anexos em Releases. Nenhum save, thumbnail, ROM ou dump privado
-foi incluído.
+O instalador aprovado e seu checksum também ficam no repositório. O workflow
+`publish-approved-release.yml` verifica os bytes aprovados, anexa os dois arquivos
+ao GitHub Releases e marca v1.0.1 como Latest. Ele não recompila o executável.
+Nenhum save, thumbnail, ROM ou dump privado foi incluído.
