@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 project(TmntIvTurtlesInTimeSNESRecomp C CXX)
 
 set(CMAKE_C_STANDARD 11)
+option(TMNT_RETAIL_WINDOWS "Build the end-user Windows ROM import flow" OFF)
 
 # Release pin for lobby matching. Release builds stamp the VERSION file so two
 # peers can prove they are the same build; everything else stamps "dev".
@@ -102,7 +103,9 @@ snesrecomp_target_desktop_host(TmntIvTurtlesInTimeSNESRecomp)
 # rom.cfg (the ROM the wizard set this project up from; git-ignored) is
 # staged beside the executable when none is there yet, so the first launch
 # opens on that dump rather than asking for one.
-snesrecomp_target_rom_cache(TmntIvTurtlesInTimeSNESRecomp)
+if(NOT TMNT_RETAIL_WINDOWS)
+    snesrecomp_target_rom_cache(TmntIvTurtlesInTimeSNESRecomp)
+endif()
 
 # Shared Dear ImGui pre-boot launcher (ROM picker, verification, display /
 # audio / input settings). Self-contained: it brings its own ImGui, GL link and
@@ -134,3 +137,16 @@ target_include_directories(TmntIvTurtlesInTimeSNESRecomp PRIVATE
 
 # Netplay is not built into this target.
 # No multitap: two seats, one controller per port.
+
+if(WIN32)
+    enable_language(RC)
+    target_sources(TmntIvTurtlesInTimeSNESRecomp PRIVATE installer/tmnt.rc)
+endif()
+if(WIN32 AND TMNT_RETAIL_WINDOWS)
+    target_sources(TmntIvTurtlesInTimeSNESRecomp PRIVATE src/windows_rom.c installer/utf8.manifest)
+    target_compile_definitions(TmntIvTurtlesInTimeSNESRecomp PRIVATE TMNT_RETAIL_WINDOWS=1)
+    if(MSVC)
+        target_link_options(TmntIvTurtlesInTimeSNESRecomp PRIVATE /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup)
+    endif()
+    target_link_libraries(TmntIvTurtlesInTimeSNESRecomp PRIVATE comdlg32 shell32)
+endif()

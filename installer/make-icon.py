@@ -1,0 +1,10 @@
+﻿from PIL import Image, ImageDraw
+im=Image.new('RGBA',(256,256)); d=ImageDraw.Draw(im)
+d.rounded_rectangle((4,4,252,252),radius=55,fill='#14261f',outline='#a3db48',width=8)
+d.ellipse((34,38,222,224),fill='#67ad36',outline='#0c1a13',width=8)
+d.polygon([(28,85),(66,75),(204,75),(232,91),(215,128),(41,128)],fill='#e95d23')
+d.rounded_rectangle((30,76,226,131),radius=20,fill='#e95d23',outline='#14261f',width=6)
+d.polygon([(55,91),(111,99),(102,116),(61,112)],fill='white')
+d.polygon([(145,99),(201,91),(195,112),(154,116)],fill='white')
+d.line((82,170,100,185,155,185,175,170),fill='#14261f',width=8)
+im.save('installer/tmnt.ico',sizes=[(16,16),(24,24),(32,32),(48,48),(64,64),(128,128),(256,256)])

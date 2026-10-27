@@ -25,3 +25,13 @@
 /input.ini
 
 .DS_Store
+
+# Local gameplay captures, diagnostics and backup scripts
+/analysis/*
+!/analysis/RELATORIO.md
+/regen.log
+
+# Local gameplay captures, diagnostics and backup scripts
+/analysis/*
+!/analysis/RELATORIO.md
+/regen.log

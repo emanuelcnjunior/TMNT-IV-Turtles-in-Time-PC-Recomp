@@ -61,7 +61,15 @@ static const SnesDesktopHostGame kGameHost = {
 #ifndef __ANDROID__
 #undef main   /* desktop: keep plain main() even if SDL_main.h remapped it */
 #endif
+#ifdef TMNT_RETAIL_WINDOWS
+static int retail_run(int argc, char **argv) { return snesrecomp_desktop_main(&kGameHost, argc, argv); }
+#endif
 int main(int argc, char **argv)
 {
+#ifdef TMNT_RETAIL_WINDOWS
+    extern int tmnt_windows_main(int, char **, int (*)(int, char **));
+    return tmnt_windows_main(argc, argv, retail_run);
+#else
     return snesrecomp_desktop_main(&kGameHost, argc, argv);
+#endif
 }

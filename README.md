@@ -11,12 +11,19 @@ Native PC recompilation of Teenage Mutant Ninja Turtles IV: Turtles in Time (SNE
 > this project, in the repository or in any release. The recompiled C is
 > generated locally from your own copy and is never committed.
 
+## Windows installer
+
+For the end-user Windows installer, ROM import, build and GitHub release instructions,
+see [installer/README.md](installer/README.md). Retail builds store the verified ROM
+in LocalAppData and require no development tools on the player machine.
+
 ## Status
 
-Scaffolded on 2026-10-27 — **not yet a working port.** The layout, build,
-regeneration pipeline, CI, and packaging are wired up; the game does not run
-until the host work in `src/game_rtl.c` is done. See
-[Porting from here](#porting-from-here).
+The Windows retail installer and ROM import flow are implemented. Automated
+validation covers ROM identity, installation, removal, preserved data and a
+boot after reinstall. See [test results](installer/TEST-RESULTS.md) for the
+scope and remaining clean-machine release checks. Boot validation does not
+establish complete gameplay compatibility.
 
 ## ROM identity
 
