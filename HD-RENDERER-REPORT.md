@@ -21,9 +21,9 @@ duas partidas. Isto é upscale/filtragem, **não texturas remasterizadas**.
 
 ## Operação
 
-- F6: Original/HD; F7: comparação; F10: painel gráfico; F4: recarregar pacote.
+- F6: alterna Original/HD sem reiniciar; F10: painel gráfico; F4: recarregar pacote.
 - F5/F9/F11 continuam reservados aos saves. Novos comandos são configuráveis
-  em `[KeyMap]`: GraphicsMenu, GraphicsToggle, GraphicsCompare, HDReload.
+  em `[KeyMap]`: GraphicsMenu, GraphicsToggle, HDReload. O modo comparação foi removido.
 - Launcher: filtros, escala inteira, proporção e pacote; Ctrl+L durante jogo.
 - Painel: setas/Enter/Esc ou D-pad/A/B do controle já mapeado pelo framework.
 - Saídas: Auto, 960×720, 1280×720, 1920×1080, 3840×2160; fullscreen usa o
@@ -72,8 +72,17 @@ de slot OAM/retângulo, fallback de camada, oclusão BG/HUD/sprite, color math,
 mosaic e Mode 7; manifesto inválido, caminho traversal e recarga transacional;
 persistência de configurações, comandos F4/F5/F6/F7/F9/F10/F11 e viewports em
 4K. O teste OpenGL real executou 27 combinações e testes da atlas autoral,
-alpha, brilho, divisão e máscara, **zero erros/falhas**. Os PNGs usados são
+alpha, brilho, divisão e máscara, **zero erros/falhas**. Esses números registram
+a validação da versão anterior, que ainda tinha Comparação. Os PNGs usados são
 sintéticos.
+
+## Atualização do modo ao vivo
+
+A comparação dividida foi removida. Valores antigos de `GraphicsMode=2` agora
+migram para HD. F6 alterna apenas Original/HD sem reiniciar o processo; o
+presenter OpenGL permanece ativo nos dois modos porque o filtro HD e os assets
+substitutos usam seu shader. F7 não possui mais ação. Esta atualização foi
+compilada e vinculada em Release; falta validação manual da tela em jogo.
 
 Com instrumentação e pacote autoral carregado (sem IDs encontrados na ROM), o
 teste privado da sessão ativa ainda restaurou os 180 quadros futuros. O perfil
