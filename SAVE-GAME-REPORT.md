@@ -3,7 +3,8 @@
 Implementação e restauração aprovadas no harness de integração com a ROM local.
 **Etapa ainda não homologada para distribuição:** faltam compilação limpa do
 executável jogável, teste no executável instalado e teste após reiniciar o Windows.
-O instalador e os binários distribuídos não foram alterados.
+O instalador estável não foi substituído. Um candidato de teste foi gerado
+posteriormente por solicitação do usuário, conforme atualização ao final.
 
 ## Base e preservação do trabalho local
 
@@ -154,7 +155,7 @@ repetir build Release completo com acesso aos fontes gerados; testar F5/F9 e a
 lista no executável instalado, com dados no LocalAppData real; encerrar/reabrir;
 reiniciar o Windows e carregar; confirmar controles físicos e áudio. Não foi
 executada campanha completa nem homologação em outra máquina. O instalador
-permanece intocado até essa validação.
+estável permanece preservado; a homologação do candidato experimental está pendente.
 
 ## Arquivos alterados
 
@@ -171,3 +172,28 @@ permanece intocado até essa validação.
 
 Nenhuma ROM, código gerado do jogo, save, imagem capturada ou dado original do
 jogo foi adicionado ao controle de versão. A ROM foi somente lida e verificada.
+
+## Atualização — instalador experimental solicitado pelo usuário
+
+Gerado `dist/TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.1-savegame-test.1.exe`
+(5.698.784 bytes), sem substituir o instalador estável v1.0.0.
+
+SHA-256: `232A861BD200254BA51213B2BBA72B4D46EE40637AC3EF00E40F72E3EC3FAD12`.
+
+Os arquivos alterados foram recompilados com MSVC x64 `/O2 /MD /DNDEBUG` e
+linkados com os objetos Release existentes do código gerado. O ponto de entrada
+é o retail normal, não o probe. O manifesto UTF-8 foi incorporado ao executável.
+O executável anterior de desenvolvimento foi preservado em
+`C:/TMNT4Recomp/save-validation/installer-build/previous-desktop.exe`.
+
+Os mesmos objetos de runtime passaram novamente no teste de carga em novo
+processo com dois jogadores: 180 quadros de estado/imagem iguais e 120 ciclos
+de restauração. O executável retail passou nas sete verificações de ROM. O
+empacotador verificou dependências, recursos e ausência de ROM/dados proibidos;
+o hash do executável empacotado coincide com o recém-linkado.
+
+`installer/build.ps1` e `installer/tmnt.iss` agora aceitam uma versão de pacote,
+mantendo `1.0.0` como padrão. O candidato foi empacotado com `-SkipBuild` após
+o build incremental acima. Não constitui compilação limpa a partir de
+`src/gen`, que continua inacessível. Instalação, operação de F5/F9 no programa
+instalado e carga após reiniciar o Windows ficam para a validação solicitada.

@@ -4,10 +4,13 @@
 #ifndef OutputDir
 #define OutputDir "..\dist"
 #endif
+#ifndef ReleaseVersion
+#define ReleaseVersion "1.0.0"
+#endif
 [Setup]
 AppId={{D31700C9-4DD9-49E3-B1CF-A83C60969E40}
 AppName=TMNT IV — Turtles in Time PC Recomp
-AppVersion=1.0.0
+AppVersion={#ReleaseVersion}
 DefaultDirName={localappdata}\Programs\TMNTIVRecomp
 DefaultGroupName=TMNT IV — Turtles in Time PC Recomp
 PrivilegesRequired=lowest
@@ -15,7 +18,7 @@ ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 MinVersion=10.0.18362
 OutputDir={#OutputDir}
-OutputBaseFilename=TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.0
+OutputBaseFilename=TMNT-IV-Turtles-in-Time-PC-Setup-v{#ReleaseVersion}
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
