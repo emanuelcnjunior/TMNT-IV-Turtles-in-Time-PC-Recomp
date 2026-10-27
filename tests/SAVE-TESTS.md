@@ -22,6 +22,9 @@ complete machine snapshots and rendered frames must match the reference.
 The host PCM delivery ring is excluded; all guest DSP/SPC state remains in the
 comparison. Then 120 successive boundaries are each captured, advanced,
 restored and advanced again. A divergence returns a nonzero exit code.
+The probe also opens, navigates, renders and cancels the save overlay, checking
+that the complete snapshot and visible frame remain unchanged. This direct API
+test does not exercise the desktop modal loop, audio device or SDL focus events.
 
 Repeat in separate output directories with player count `2`, action frames
 `0` (first-stage checkpoint), and action selector `nmi` (find a suspended NMI
