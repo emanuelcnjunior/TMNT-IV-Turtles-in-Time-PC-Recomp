@@ -1,0 +1,26 @@
+# ROM identity for TMNT IV Turtles in Time — the single source of truth.
+#
+# Read by three consumers, so a revision change is made once, here:
+#   - the build   (CMake generates snesrecomp_rom_identity.h from this file)
+#   - tools/regen.sh
+#   - .github/workflows/release.yml
+#
+# Format is `key = value`, one per line; `#` starts a comment. Values may be
+# quoted. Leaving a digest empty means the build cannot verify a ROM it is
+# handed — it will say so rather than accept it.
+
+display_name    = TMNT IV Turtles in Time
+rom_file        = Teenage Mutant Ninja Turtles IV - Turtles in Time (USA).sfc
+# Every digest of the bare image (copier header stripped), so the Retro
+# catalog can take a submission's identity from this file rather than ask
+# the submitter to hash the ROM again. The build verifies on crc32/sha256.
+expected_crc32  = 5940bd99
+expected_md5    = 807009d25eb31559974daa3e39eeccd7
+expected_sha1   = 4f8fc0f45023e0339e501054b253c33f479a001a
+expected_sha256 = 5b82cdd6f2da56f43680d6a5021faebe2e06036d30602c1a7917aa414cf8b5f4
+rom_size        = 1048576
+mapping         = lorom
+region          = USA
+# What a mod package's [[target]] game_id must name to apply to this title
+# (snesrecomp/docs/MOD_PACKAGES.md). Stable across revisions on purpose.
+game_id         = tmntivturtlesintime-usa

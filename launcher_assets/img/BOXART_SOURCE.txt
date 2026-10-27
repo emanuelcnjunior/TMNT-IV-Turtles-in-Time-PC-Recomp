@@ -1,0 +1,5 @@
+Box art sourced from libretro-thumbnails (Named_Boxarts).
+Matched name: Teenage Mutant Ninja Turtles IV - Turtles in Time (USA)
+URL: https://thumbnails.libretro.com/Nintendo%20-%20Super%20Nintendo%20Entertainment%20System/Named_Boxarts/Teenage%20Mutant%20Ninja%20Turtles%20IV%20-%20Turtles%20in%20Time%20(USA).png
+https://github.com/libretro-thumbnails/libretro-thumbnails
+PNG is for README; TGA is for recomp-ui LAUNCHER_BOXART.
