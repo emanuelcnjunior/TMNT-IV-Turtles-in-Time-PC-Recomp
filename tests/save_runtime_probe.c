@@ -16,6 +16,7 @@
 #include "crc32.h"
 #include "snapshot_guard.h"
 #include "desktop/config.h"
+#include "snes_savestate_menu.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -136,6 +137,20 @@ int main(int argc, char **argv) {
         digest(after);if(strcmp(before,after)) return 28;
     }
     free(invalid);puts("PASS: corruption, truncation, wrong ROM/schema/identity preserve live state");
+    /* Pure overlay contract: opening, navigating, drawing and cancelling
+     * must not advance or modify any serialized guest state or visible pixel.
+     * This does not exercise the SDL audio/device event pump. */
+    char menu_before[65],menu_after[65];digest(menu_before);
+    snes_savestate_menu_poll_open(0);
+    if(!snes_savestate_menu_poll_open((1u<<2)|(1u<<11)) ||
+       !snes_savestate_menu_is_open()) return 39;
+    snes_savestate_menu_poll_nav(0,1);
+    snes_savestate_menu_poll_nav(1u<<5,2);
+    const uint32_t *panel;int pw,ph;
+    if(!snes_savestate_menu_overlay_image(&panel,&pw,&ph) || !panel || pw<=0 || ph<=0) return 40;
+    snes_savestate_menu_close();digest(menu_after);
+    if(strcmp(menu_before,menu_after)) return 41;
+    puts("PASS: open/navigate/render/cancel overlay preserves complete machine and visible frame");
     unsigned checkpoint_pc=snes_beam_frame_driver_resume_pc();
     bool suspended=checkpoint_pc>=0x8174 && checkpoint_pc<0x8400 && g_cpu.S<0x1dff;
     if(writing) picture("checkpoint.ppm");
