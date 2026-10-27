@@ -13,6 +13,11 @@ Native PC recompilation of Teenage Mutant Ninja Turtles IV: Turtles in Time (SNE
 
 ## Windows installer
 
+[**Download the Windows installer (v1.0.0)**](https://github.com/emanuelcnjunior/TMNT-IV-Turtles-in-Time-PC-Recomp/releases/download/v1.0.0/TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.0.exe)
+
+Requires Windows 10 1903+ x64 and your own original USA ROM, selected during
+installation. The ROM is not included. [Release notes and SHA-256](https://github.com/emanuelcnjunior/TMNT-IV-Turtles-in-Time-PC-Recomp/releases/latest).
+
 For the end-user Windows installer, ROM import, build and GitHub release instructions,
 see [installer/README.md](installer/README.md). Retail builds store the verified ROM
 in LocalAppData and require no development tools on the player machine.
