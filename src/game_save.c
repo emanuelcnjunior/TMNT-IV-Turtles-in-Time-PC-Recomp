@@ -16,6 +16,7 @@ typedef struct {
     char rom[65], schema[65];
     uint8_t reserved[2];
 } GameSaveHeader;
+#define TMNT_SAVE_SCHEMA_1_0_1 "aa82748a121816caa5ef40c41de8985f9554fb5904c62a71dabb77415543da17"
 static GameSaveHeader staged;
 static bool staged_valid;
 
@@ -38,10 +39,16 @@ void GameSaveExtra(SaveLoadInfo *sli) {
 }
 
 static bool valid_header(const GameSaveHeader *h) {
+    /* The HD presenter, diagnostics buffers and pack cache are host-only; the
+     * Ppu and execution-state layouts stayed byte-for-byte compatible with
+     * 1.0.1. Keep that published schema readable while future layouts continue
+     * to require the generated current schema below. */
+    bool supported_schema = !memcmp(h->schema, TMNT_SAVE_SCHEMA, 65) ||
+        !memcmp(h->schema, TMNT_SAVE_SCHEMA_1_0_1, 65);
     return h->magic == 0x34544d54 && h->version == 1 &&
         h->pc <= 0xffffff && cpu_pc24_resumable(h->pc) && h->wai <= 1 &&
         !memcmp(h->rom, SNESRECOMP_ROM_EXPECTED_SHA256, 65) &&
-        !memcmp(h->schema, TMNT_SAVE_SCHEMA, 65) &&
+        supported_schema &&
         !h->reserved[0] && !h->reserved[1];
 }
 
