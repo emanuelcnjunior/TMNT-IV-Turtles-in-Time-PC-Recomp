@@ -25,8 +25,14 @@
  * complete list of hooks and what each is for.
  */
 
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
 #include "host_main.h"
 #include "game_rtl.h"
+#include "common_rtl.h"
+#include <string.h>
 #include "snesrecomp_rom_identity.h"  /* generated from rom_identity.txt */
 
 #ifndef __ANDROID__
@@ -55,7 +61,7 @@ static const SnesDesktopHostGame kGameHost = {
     .num_players         = 2,
     /* Battery-backed SRAM shows the launcher's SAVES panel. Leave NULL for a
      * title without one. The path is exe-relative. */
-    .sram_path           = "saves/save.srm",
+    .sram_path           = NULL, /* USA cartridge has no battery SRAM. */
 };
 
 #ifndef __ANDROID__
@@ -66,10 +72,29 @@ static int retail_run(int argc, char **argv) { return snesrecomp_desktop_main(&k
 #endif
 int main(int argc, char **argv)
 {
+#ifdef _WIN32
+    wchar_t root[1024]; char utf8[3072];
+    DWORD n = GetEnvironmentVariableW(L"LOCALAPPDATA", root, 1024);
+    if (!n || n > 950) goto save_path_error;
+    wcscat_s(root, 1024, L"\\TMNTIVRecomp");
+    if (!CreateDirectoryW(root, NULL) && GetLastError() != ERROR_ALREADY_EXISTS) goto save_path_error;
+    wcscat_s(root, 1024, L"\\saves");
+    if (!CreateDirectoryW(root, NULL) && GetLastError() != ERROR_ALREADY_EXISTS) goto save_path_error;
+    if (!WideCharToMultiByte(CP_UTF8, 0, root, -1, utf8, sizeof(utf8), NULL, NULL) ||
+        strlen(utf8) >= 1024) goto save_path_error;
+    RtlSetSaveRoot(utf8);
+    RtlSetQuickSaveRoot(utf8);
+#endif
 #ifdef TMNT_RETAIL_WINDOWS
     extern int tmnt_windows_main(int, char **, int (*)(int, char **));
     return tmnt_windows_main(argc, argv, retail_run);
 #else
     return snesrecomp_desktop_main(&kGameHost, argc, argv);
+#endif
+#ifdef _WIN32
+save_path_error:
+    MessageBoxW(NULL, L"Não foi possível preparar a pasta de saves em LocalAppData.\nCannot prepare the save folder in LocalAppData.",
+                L"TMNT IV", MB_OK | MB_ICONERROR);
+    return 1;
 #endif
 }

@@ -3,6 +3,7 @@ project(TmntIvTurtlesInTimeSNESRecomp C CXX)
 
 set(CMAKE_C_STANDARD 11)
 option(TMNT_RETAIL_WINDOWS "Build the end-user Windows ROM import flow" OFF)
+option(TMNT_SAVE_RUNTIME_PROBE "Build private-ROM save integration probe instead of desktop entry" OFF)
 
 # Release pin for lobby matching. Release builds stamp the VERSION file so two
 # peers can prove they are the same build; everything else stamps "dev".
@@ -37,13 +38,44 @@ set(SNESRECOMP_ENABLE_MODS ON CACHE BOOL
     "Mod package loader + trusted plugins (required for every title)" FORCE)
 include(${SNESRECOMP_ROOT}/runner/runner.cmake)
 
+set(_tmnt_entry src/main.c)
+if(TMNT_SAVE_RUNTIME_PROBE)
+    set(_tmnt_entry tests/save_runtime_probe.c)
+endif()
 add_executable(TmntIvTurtlesInTimeSNESRecomp
     ${SNESRECOMP_RUNNER_SOURCES}
-    src/main.c
+    ${_tmnt_entry}
     src/host_contract.c
     src/game_rtl.c
+    src/game_save.c
     src/gen_stubs.c
 )
+
+# Native execution residue is tied to this source/ABI contract. Reject a save
+# from a changed runtime rather than guessing at raw struct compatibility.
+file(GLOB_RECURSE _save_sources CONFIGURE_DEPENDS
+    "${SNESRECOMP_ROOT}/runner/src/*.c" "${SNESRECOMP_ROOT}/runner/src/*.h"
+    "${CMAKE_SOURCE_DIR}/src/*.c" "${CMAKE_SOURCE_DIR}/src/*.h"
+    "${CMAKE_SOURCE_DIR}/recomp/*.cfg")
+set(_save_contract "tmnt4-save-v1;${CMAKE_C_COMPILER_ID};${CMAKE_C_COMPILER_VERSION};${CMAKE_SIZEOF_VOID_P}")
+string(APPEND _save_contract ";${CMAKE_BUILD_TYPE};${CMAKE_C_FLAGS};${CMAKE_C_FLAGS_RELEASE}")
+get_cmake_property(_save_options CACHE_VARIABLES)
+list(SORT _save_options)
+foreach(_save_option IN LISTS _save_options)
+    if(_save_option MATCHES "^SNESRECOMP_" AND NOT _save_option MATCHES "ROOT|DIR|PATH")
+        string(APPEND _save_contract ";${_save_option}=${${_save_option}}")
+    endif()
+endforeach()
+foreach(_save_source IN LISTS _save_sources)
+    file(SHA256 "${_save_source}" _save_hash)
+    string(APPEND _save_contract "${_save_hash}")
+endforeach()
+string(SHA256 TMNT_SAVE_SCHEMA "${_save_contract}")
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/save_schema.h"
+    "#define TMNT_SAVE_SCHEMA \"${TMNT_SAVE_SCHEMA}\"\n")
+target_include_directories(TmntIvTurtlesInTimeSNESRecomp PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
+target_compile_definitions(TmntIvTurtlesInTimeSNESRecomp PRIVATE
+    SNES_SAVESTATE_SLOTS=5 SNESRECOMP_PERSISTENT_SAVE_PROFILE=1)
 
 # ROM identity. rom_identity.txt is the one place the digests live: the build
 # turns it into snesrecomp_rom_identity.h (SNESRECOMP_ROM_EXPECTED_SHA256 and

@@ -119,6 +119,19 @@ The scaffold stops where the game-specific work starts. In rough order:
 
 Two players, one controller per port.
 
+## Save states (development branch)
+
+Windows saves use `%LOCALAPPDATA%\TMNTIVRecomp\saves\`: five manual slots
+and a separate quick slot. F5 saves, F9 loads, and F11 opens the paused save
+browser (Select+R on a controller). Manual overwrites require confirmation.
+`[KeyMap] QuickSave`, `QuickLoad` and `SaveStateMenu` in `config.ini` can rebind
+these commands; the legacy numbered Load/Save lists are inactive in this profile.
+
+These states are tied to the ROM and runtime schema. See the
+[validation report](SAVE-GAME-REPORT.md) for proven restoration tests and the
+remaining Release, installed-executable and Windows-reboot checks. The installer
+has not been changed for this feature.
+
 ## License
 
 This project's own source is under the license in `LICENSE`. The framework

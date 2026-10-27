@@ -33,6 +33,7 @@
  */
 
 #include "game_rtl.h"
+#include "game_save.h"
 
 #include "beam_frame_driver.h"
 
@@ -62,4 +63,11 @@ const RtlGameInfo kGameInfo = {
     .draw_ppu_frame = &GameDrawPpuFrame,
     .save_name_prefix = "save",
     .session_reset = &GameSessionReset,
+    .hardware_reset = &GameSessionReset,
+    .minimum_state_version = 10,
+    .snapshot_guard_identity = &GameSaveIdentity,
+    .snapshot_preflight = &GameSavePreflight,
+    .state_save_extra = &GameSaveExtra,
+    .state_load_extra = &GameLoadExtra,
+    .on_state_loaded = &GameStateLoaded,
 };
