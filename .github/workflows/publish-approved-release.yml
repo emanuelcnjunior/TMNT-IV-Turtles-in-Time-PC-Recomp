@@ -1,0 +1,64 @@
+name: Publish approved Windows release v1.0.1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/publish-approved-release.yml
+      - installer/RELEASE-v1.0.1.md
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-approved-v1.0.1
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Download the approved installer and verify its checksum
+        shell: bash
+        run: |
+          set -euo pipefail
+          asset=TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.1.exe
+          for path in "downloads/v1.0.1/$asset" "downloads/v1.0.1/$asset.sha256" installer/RELEASE-v1.0.1.md; do
+            gh api --method GET -H 'Accept: application/vnd.github.raw+json' \
+              "repos/$GH_REPO/contents/$path?ref=$GITHUB_SHA" > "$(basename "$path")"
+          done
+          printf '%s  %s\n' '8d2b96a2ae700e1a74962b972535d6a4641ddab5dd2704ca81ab0dac612e5f4c' "$asset" | sha256sum --check -
+          sha256sum --check "$asset.sha256"
+
+      - name: Publish v1.0.1 and mark it as the latest release
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag=v1.0.1
+          asset=TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.1.exe
+          if gh api "repos/$GH_REPO/releases/tags/$tag" > release.json 2> release-query.log; then
+            mkdir -p existing
+            for file in "$asset" "$asset.sha256"; do
+              if jq -e --arg name "$file" '.assets[] | select(.name == $name)' release.json > /dev/null; then
+                gh release download "$tag" --pattern "$file" --dir existing
+                cmp "$file" "existing/$file"
+              else
+                gh release upload "$tag" "$file"
+              fi
+            done
+          else
+            gh release create "$tag" "$asset" "$asset.sha256" --draft \
+              --target "$GITHUB_SHA" --title 'TMNT IV PC Recomp v1.0.1 — Save Game' \
+              --notes-file RELEASE-v1.0.1.md
+          fi
+          gh release edit "$tag" --draft=false --prerelease=false --latest \
+            --title 'TMNT IV PC Recomp v1.0.1 — Save Game' --notes-file RELEASE-v1.0.1.md
+          gh api "repos/$GH_REPO/releases/tags/$tag" > published.json
+          jq -e '.draft == false and .prerelease == false' published.json
+          jq -e --arg name "$asset" '.assets[] | select(.name == $name and .size == 5698764 and .digest == "sha256:8d2b96a2ae700e1a74962b972535d6a4641ddab5dd2704ca81ab0dac612e5f4c")' published.json
+          gh api "repos/$GH_REPO/releases/latest" --jq '.tag_name' | grep -Fx "$tag"
