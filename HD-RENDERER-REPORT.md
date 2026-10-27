@@ -83,6 +83,8 @@ migram para HD. F6 alterna apenas Original/HD sem reiniciar o processo; o
 presenter OpenGL permanece ativo nos dois modos porque o filtro HD e os assets
 substitutos usam seu shader. F7 não possui mais ação. Esta atualização foi
 compilada e vinculada em Release; falta validação manual da tela em jogo.
+Scale2x agora é o filtro padrão do HD e configurações anteriores migram para
+ele uma vez; o jogador ainda pode selecionar Sharp ou Nearest no F10.
 
 Com instrumentação e pacote autoral carregado (sem IDs encontrados na ROM), o
 teste privado da sessão ativa ainda restaurou os 180 quadros futuros. O perfil
