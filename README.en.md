@@ -46,14 +46,37 @@ Save files live at:
 
 Save files include integrity and compatibility checks. **Runtime upgrades may invalidate older states**; back up saves before updating. See the [save-state technical report (Portuguese)](SAVE-GAME-REPORT.md) and [save UI audit](SAVE-UI-AUDIT.md) for test details and limitations.
 
-### 🖼️ Original and HD graphics
+### 🖼️ Classic and HD modes
 
-- **Original:** preserves the SNES-style presentation.
-- **HD:** uses GPU upscaling/filters (**Scale 2x** is the initial filter).
-- **F10:** select filtering, scale, aspect ratio, VSync, fullscreen/windowed mode, and HD packs.
-- **WIDE FILL / PREENCHER** fills widescreen monitors but **stretches the original 4:3 image**. Disable it to preserve the aspect ratio.
+The gameplay screenshots show the same stage using two selectable presentations, **without changing the original characters, collisions, or gameplay**:
 
-**Note:** the current HD mode enhances scaling; it **does not mean sprites, tiles, or backgrounds have been hand-remastered**. Optional HD packs must use original or properly licensed assets.
+- **Classic / Original:** retains the SNES pixel-art presentation.
+- **HD:** applies GPU upscaling and graphics filters. **Scale2x** refines some pixel edges; it does not replace character sprites or scenery with redrawn artwork.
+- **Instant toggle:** press **F6** on the keyboard or **Start** on a controller; Start still works normally in-game.
+
+#### Graphics settings menu (F10)
+
+The captured menu includes **Original/HD mode**, **Scale2x filtering**, **output resolution** (such as 1920 × 1080), **scaling**, **4:3 aspect ratio**, **VSync**, **fullscreen**, **HD Pack**, **reload**, and **ID diagnostics**.
+
+- **4:3:** preserves the traditional SNES aspect ratio.
+- **WIDE FILL / PREENCHER:** fills 16:9 screens by stretching the image horizontally. Turn it off for undistorted 4:3.
+- **HD Pack:** requires a compatible external pack. The **“MANIFESTO AUSENTE / MISSING MANIFEST”** message shown in the screenshot means **no HD-pack manifest was found**; Original and Scale2x do not require one.
+- **Diagnostics / IDs:** developer-oriented graphics resource identification.
+
+**Important:** HD mode currently improves presentation/upscaling; it is **not a complete texture, sprite, or background remaster**. Optional HD packs must use original or appropriately licensed artwork.
+
+### 💾 Save States screen
+
+The captured UI shows **six positions: five manual slots and one Quick Save**, with gameplay thumbnails, save date/time, and empty slots marked **NEW SLOT**. Navigation supports keyboards and controllers.
+
+- **F11:** opens the save-state list.
+- **Arrow keys / D-pad:** choose a slot.
+- **X (keyboard) or A (controller):** load the selected slot.
+- **S (keyboard) or X (controller):** save to the selected slot, following the on-screen legend.
+- **Esc (keyboard) or B (controller):** go back.
+- **F1 / LT-L2** and **F2 / RT-R2:** quick-save and quick-load respectively.
+
+Save files are stored in `%LOCALAPPDATA%\\TMNTIVRecomp\\saves\\`. Save-state formats may become incompatible after runtime updates; make a backup before upgrading.
 
 ## ✅ Project status and testing
 
