@@ -33,6 +33,7 @@
 #include "game_rtl.h"
 #include "common_rtl.h"
 #include <string.h>
+#include <stdlib.h>
 #include "snesrecomp_rom_identity.h"  /* generated from rom_identity.txt */
 
 #ifndef __ANDROID__
@@ -59,6 +60,9 @@ static const SnesDesktopHostGame kGameHost = {
     .build_version       = SNES_GAME_VERSION,
     .game_info           = &kGameInfo,
     .num_players         = 2,
+    .graphics_profile    = 1,
+    .display_aspect_supported = 1,
+    .in_game_launcher    = 1,
     /* Battery-backed SRAM shows the launcher's SAVES panel. Leave NULL for a
      * title without one. The path is exe-relative. */
     .sram_path           = NULL, /* USA cartridge has no battery SRAM. */
@@ -73,11 +77,14 @@ static int retail_run(int argc, char **argv) { return snesrecomp_desktop_main(&k
 int main(int argc, char **argv)
 {
 #ifdef _WIN32
-    wchar_t root[1024]; char utf8[3072];
+    wchar_t root[1024]; char utf8[3072], user_config[3072];
     DWORD n = GetEnvironmentVariableW(L"LOCALAPPDATA", root, 1024);
     if (!n || n > 950) goto save_path_error;
     wcscat_s(root, 1024, L"\\TMNTIVRecomp");
     if (!CreateDirectoryW(root, NULL) && GetLastError() != ERROR_ALREADY_EXISTS) goto save_path_error;
+    wchar_t config_path[1024];
+    swprintf_s(config_path,1024,L"%s\\config.ini",root);
+    if(!WideCharToMultiByte(CP_UTF8,0,config_path,-1,user_config,sizeof(user_config),NULL,NULL))goto save_path_error;
     wcscat_s(root, 1024, L"\\saves");
     if (!CreateDirectoryW(root, NULL) && GetLastError() != ERROR_ALREADY_EXISTS) goto save_path_error;
     if (!WideCharToMultiByte(CP_UTF8, 0, root, -1, utf8, sizeof(utf8), NULL, NULL) ||
@@ -89,6 +96,15 @@ int main(int argc, char **argv)
     extern int tmnt_windows_main(int, char **, int (*)(int, char **));
     return tmnt_windows_main(argc, argv, retail_run);
 #else
+#ifdef _WIN32
+    int explicit_config=0;
+    for(int i=1;i<argc;i++)if(!strcmp(argv[i],"--config"))explicit_config=1;
+    if(!explicit_config) {
+      char **args=calloc((size_t)argc+3,sizeof(*args));if(!args)return 1;
+      for(int i=0;i<argc;i++)args[i]=argv[i];args[argc]="--config";args[argc+1]=user_config;
+      int result=snesrecomp_desktop_main(&kGameHost,argc+2,args);free(args);return result;
+    }
+#endif
     return snesrecomp_desktop_main(&kGameHost, argc, argv);
 #endif
 #ifdef _WIN32
