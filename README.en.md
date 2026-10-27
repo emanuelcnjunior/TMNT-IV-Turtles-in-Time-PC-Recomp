@@ -48,6 +48,10 @@ Save files include integrity and compatibility checks. **Runtime upgrades may in
 
 ### 🖼️ Classic and HD modes
 
+| Classic mode | HD mode (Scale2x) |
+|:---:|:---:|
+| ![Gameplay in Classic mode](docs/screenshots/classic.png) | ![Gameplay in HD mode with Scale2x](docs/screenshots/hd.png) |
+
 The gameplay screenshots show the same stage using two selectable presentations, **without changing the original characters, collisions, or gameplay**:
 
 - **Classic / Original:** retains the SNES pixel-art presentation.
@@ -55,6 +59,8 @@ The gameplay screenshots show the same stage using two selectable presentations,
 - **Instant toggle:** press **F6** on the keyboard or **Start** on a controller; Start still works normally in-game.
 
 #### Graphics settings menu (F10)
+
+![TMNT IV graphics settings menu](docs/screenshots/graphic%20config.png)
 
 The captured menu includes **Original/HD mode**, **Scale2x filtering**, **output resolution** (such as 1920 × 1080), **scaling**, **4:3 aspect ratio**, **VSync**, **fullscreen**, **HD Pack**, **reload**, and **ID diagnostics**.
 
@@ -66,6 +72,8 @@ The captured menu includes **Original/HD mode**, **Scale2x filtering**, **output
 **Important:** HD mode currently improves presentation/upscaling; it is **not a complete texture, sprite, or background remaster**. Optional HD packs must use original or appropriately licensed artwork.
 
 ### 💾 Save States screen
+
+![Save States screen with thumbnail and available slots](docs/screenshots/save%20states.png)
 
 The captured UI shows **six positions: five manual slots and one Quick Save**, with gameplay thumbnails, save date/time, and empty slots marked **NEW SLOT**. Navigation supports keyboards and controllers.
 
