@@ -46,14 +46,37 @@ Os arquivos ficam em:
 
 Os estados possuem verificações de integridade e compatibilidade. **Uma atualização do runtime pode tornar saves antigos incompatíveis**; faça backup antes de atualizar. Consulte o [relatório técnico de saves](SAVE-GAME-REPORT.md) e a [auditoria da interface](SAVE-UI-AUDIT.md) para os testes e limitações.
 
-### 🖼️ Gráficos Original e HD
+### 🖼️ Modo Clássico e modo HD
 
-- **Original:** mantém a apresentação clássica do SNES.
-- **HD:** aplica upscale/filtros pela GPU (o filtro inicial é **Scale 2x**).
-- **F10:** permite selecionar filtro, escala, proporção, VSync, janela/tela cheia e pacote HD.
-- A opção **WIDE FILL / PREENCHER** preenche telas widescreen, mas **estica a imagem 4:3**. Desative-a para preservar a proporção.
+As capturas de gameplay mostram a mesma fase do jogo com duas apresentações visuais selecionáveis, **sem alterar personagens, colisões ou a jogabilidade original**:
 
-**Importante:** o modo HD atual melhora o escalonamento; **não significa que os sprites, tiles e cenários tenham sido remasterizados manualmente**. Pacotes HD opcionais devem usar recursos autorais ou autorizados.
+- **Clássico / Original:** mantém os pixels e a estética do SNES, ideal para jogar com a apresentação tradicional.
+- **HD:** utiliza escalonamento e filtros gráficos na GPU. O filtro **Scale2x** suaviza determinados contornos dos pixels, mas não substitui por si só os sprites ou cenários por arte redesenhada.
+- **Alternância imediata:** pressione **F6** no teclado ou **Start** no controle; o Start também continua funcionando dentro do jogo.
+
+#### Menu de configurações gráficas (F10)
+
+O menu exibido nas capturas apresenta opções para **Modo Original/HD**, **Filtro (Scale2x)**, **resolução de saída** (por exemplo, 1920 × 1080), **escala**, **proporção 4:3**, **VSync**, **tela cheia**, **HD Pack**, **recarregamento** e **diagnóstico de IDs**.
+
+- **4:3:** mantém a proporção tradicional do SNES.
+- **WIDE FILL / PREENCHER:** estende a imagem para preencher 16:9; pode causar distorção horizontal. Desative para manter 4:3.
+- **HD Pack:** a função depende de um pacote externo compatível. A mensagem **“MANIFESTO AUSENTE / MISSING MANIFEST”**, visível na captura, indica que **nenhum manifesto de pacote HD foi encontrado**; não é um erro necessário para usar Original ou Scale2x.
+- **Diagnóstico / IDs:** ferramenta de desenvolvimento para mapear recursos gráficos.
+
+**Importante:** o modo HD atual é um aprimoramento de apresentação/upscale, **não uma remasterização completa das texturas, sprites e backgrounds**. Pacotes opcionais precisam usar arte autoral ou devidamente licenciada.
+
+### 💾 Tela de Save States
+
+A captura da interface mostra uma lista visual de **seis posições: cinco slots manuais e um Quick Save**, com miniatura do jogo, data/hora e indicação de slots vazios (**NEW SLOT**). A navegação foi projetada para teclado e controles.
+
+- **F11:** abre a lista de save states.
+- **Setas / direcional:** selecionam o slot.
+- **X (teclado) ou botão A (controle):** carrega o slot selecionado.
+- **S (teclado) ou botão X (controle):** salva no slot selecionado, conforme as instruções exibidas na tela.
+- **Esc (teclado) ou botão B (controle):** volta ao jogo.
+- **F1 / LT-L2** e **F2 / RT-R2:** acesso rápido a salvar e carregar, respectivamente.
+
+Os saves ficam em `%LOCALAPPDATA%\\TMNTIVRecomp\\saves\\`. Slots incompatíveis com alterações de formato/runtime podem não carregar; mantenha backup antes de atualizar.
 
 ## ✅ Estado e testes
 
