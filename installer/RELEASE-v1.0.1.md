@@ -1,37 +1,15 @@
 # v1.0.1 — Save Game
 
-O usuário confirmou o teste do executável fornecido. O instalador v1.0.1
-empacota exatamente esse executável, sem recompilá-lo após a aprovação.
+Instalador atualizado com o executável mais recente aprovado para teste.
 
-- Cinco slots manuais e Quick Save separado em LocalAppData.
-- F5 salva, F9 carrega, F11 abre a lista de saves.
-- Gravação segura, verificação de compatibilidade e contexto completo de
-  execução, incluindo NMI suspensa e resíduos da PPU.
-- O instalador não contém ROM; exige a ROM USA original do usuário.
+- Cinco slots manuais e um Quick Save em `%LOCALAPPDATA%\TMNTIVRecomp\saves`.
+- Atalhos padrão: F1/F2 no teclado e LT/RT no controle para salvar/carregar rapidamente.
+- F11 abre a lista de saves. Os atalhos podem ser configurados no menu do launcher.
+- Start no controle ou F6 no teclado alterna Original/HD durante a partida. Scale2x permanece como filtro padrão.
+- O instalador não inclui a ROM; o jogador seleciona sua própria ROM USA original durante a instalação.
 
-Instalador: `downloads/v1.0.1/TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.1.exe`.
+Executável incluído, SHA-256: `5380f569a58f6f3b821f72e8ceb0147e1e6e7e63eb6b80193d22e1f477d0d15e`.
 
-SHA-256:
-`8D2B96A2AE700E1A74962B972535D6A4641DDAB5DD2704CA81AB0DAC612E5F4C`.
+Instalador, SHA-256: `417c16e2cc38bf478fe6a4045e922e7dcdc7a40573b9b4107f7f22d64956c7bb`.
 
-Executável aprovado, SHA-256:
-`012918343BAF3205A6EF50D66F1D2274BB849C6CD25AE3AE3787C09B73894053`.
-
-O build é incremental: arquivos alterados recompilados em Release e objetos
-existentes do código gerado. O bloqueio de acesso a `src/gen` impediu uma
-recompilação limpa. A identificação interna do executável mantém a do candidato
-`1.0.1-savegame-test.1`; a versão do pacote é 1.0.1. O executável foi mantido
-idêntico ao aprovado para não introduzir mudanças após o teste.
-
-A confirmação do usuário não foi interpretada como comprovação de todos os
-cenários de hardware, reinício do Windows ou reinstalação. Os resultados
-automatizados estão em `SAVE-GAME-REPORT.md`.
-
-A Etapa 2 continua parcial: localização PT/EN, exclusão confirmada, classificação
-visual de saves inválidos e integração ao launcher permanecem pendentes,
-conforme `SAVE-UI-AUDIT.md`. A versão 1.0.0 e seu instalador foram preservados.
-
-O instalador aprovado e seu checksum também ficam no repositório. O workflow
-`publish-approved-release.yml` verifica os bytes aprovados, anexa os dois arquivos
-ao GitHub Releases e marca v1.0.1 como Latest. Ele não recompila o executável.
-Nenhum save, thumbnail, ROM ou dump privado foi incluído.
+O relatório de validação do sistema de save está em `SAVE-GAME-REPORT.md`. A auditoria da interface de saves e seus limites conhecidos está em `SAVE-UI-AUDIT.md`.

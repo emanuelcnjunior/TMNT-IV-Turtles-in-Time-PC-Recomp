@@ -35,7 +35,7 @@ jobs:
               "https://api.github.com/repos/$GH_REPO/contents/$path?ref=$GITHUB_SHA" \
               --output "$(basename "$path")"
           done
-          printf '%s  %s\n' '8d2b96a2ae700e1a74962b972535d6a4641ddab5dd2704ca81ab0dac612e5f4c' "$asset" | sha256sum --check -
+          printf '%s  %s\n' '417c16e2cc38bf478fe6a4045e922e7dcdc7a40573b9b4107f7f22d64956c7bb' "$asset" | sha256sum --check -
           sha256sum --check "$asset.sha256"
 
       - name: Publish v1.0.1 and mark it as the latest release
@@ -45,14 +45,8 @@ jobs:
           tag=v1.0.1
           asset=TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.1.exe
           if gh api "repos/$GH_REPO/releases/tags/$tag" > release.json 2> release-query.log; then
-            mkdir -p existing
             for file in "$asset" "$asset.sha256"; do
-              if jq -e --arg name "$file" '.assets[] | select(.name == $name)' release.json > /dev/null; then
-                gh release download "$tag" --pattern "$file" --dir existing
-                cmp "$file" "existing/$file"
-              else
-                gh release upload "$tag" "$file"
-              fi
+              gh release upload "$tag" "$file" --clobber
             done
           else
             gh release create "$tag" "$asset" "$asset.sha256" --draft \
@@ -63,5 +57,5 @@ jobs:
             --title 'TMNT IV PC Recomp v1.0.1 — Save Game' --notes-file RELEASE-v1.0.1.md
           gh api "repos/$GH_REPO/releases/tags/$tag" > published.json
           jq -e '.draft == false and .prerelease == false' published.json
-          jq -e --arg name "$asset" '.assets[] | select(.name == $name and .size == 5698764 and .digest == "sha256:8d2b96a2ae700e1a74962b972535d6a4641ddab5dd2704ca81ab0dac612e5f4c")' published.json
+          jq -e --arg name "$asset" '.assets[] | select(.name == $name and .size == 5695642 and .digest == "sha256:417c16e2cc38bf478fe6a4045e922e7dcdc7a40573b9b4107f7f22d64956c7bb")' published.json
           gh api "repos/$GH_REPO/releases/latest" --jq '.tag_name' | grep -Fx "$tag"
