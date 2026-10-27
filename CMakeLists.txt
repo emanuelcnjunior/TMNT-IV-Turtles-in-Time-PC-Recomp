@@ -4,6 +4,8 @@ project(TmntIvTurtlesInTimeSNESRecomp C CXX)
 set(CMAKE_C_STANDARD 11)
 option(TMNT_RETAIL_WINDOWS "Build the end-user Windows ROM import flow" OFF)
 option(TMNT_SAVE_RUNTIME_PROBE "Build private-ROM save integration probe instead of desktop entry" OFF)
+set(TMNT_HD_TEST "" CACHE STRING "Optional synthetic graphics test entry: gpu, packs, or runtime")
+set_property(CACHE TMNT_HD_TEST PROPERTY STRINGS "" gpu packs runtime)
 
 # Release pin for lobby matching. Release builds stamp the VERSION file so two
 # peers can prove they are the same build; everything else stamps "dev".
@@ -41,6 +43,17 @@ include(${SNESRECOMP_ROOT}/runner/runner.cmake)
 set(_tmnt_entry src/main.c)
 if(TMNT_SAVE_RUNTIME_PROBE)
     set(_tmnt_entry tests/save_runtime_probe.c)
+elseif(TMNT_HD_TEST STREQUAL "gpu")
+    set(_tmnt_entry tests/graphics_gpu_probe.c)
+elseif(TMNT_HD_TEST STREQUAL "packs")
+    set(_tmnt_entry tests/hd_pack_probe.c)
+elseif(TMNT_HD_TEST STREQUAL "runtime")
+    set(_tmnt_entry tests/save_runtime_probe.c)
+elseif(NOT TMNT_HD_TEST STREQUAL "")
+    message(FATAL_ERROR "TMNT_HD_TEST must be gpu, packs, runtime, or empty")
+endif()
+if(TMNT_SAVE_RUNTIME_PROBE AND NOT TMNT_HD_TEST STREQUAL "")
+    message(FATAL_ERROR "Use either TMNT_SAVE_RUNTIME_PROBE or TMNT_HD_TEST")
 endif()
 add_executable(TmntIvTurtlesInTimeSNESRecomp
     ${SNESRECOMP_RUNNER_SOURCES}
@@ -75,7 +88,7 @@ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/save_schema.h"
     "#define TMNT_SAVE_SCHEMA \"${TMNT_SAVE_SCHEMA}\"\n")
 target_include_directories(TmntIvTurtlesInTimeSNESRecomp PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
 target_compile_definitions(TmntIvTurtlesInTimeSNESRecomp PRIVATE
-    SNES_SAVESTATE_SLOTS=5 SNESRECOMP_PERSISTENT_SAVE_PROFILE=1)
+    SNES_SAVESTATE_SLOTS=5 SNESRECOMP_PERSISTENT_SAVE_PROFILE=1 SNESRECOMP_HD_ASSETS=1)
 
 # ROM identity. rom_identity.txt is the one place the digests live: the build
 # turns it into snesrecomp_rom_identity.h (SNESRECOMP_ROM_EXPECTED_SHA256 and
@@ -182,3 +195,4 @@ if(WIN32 AND TMNT_RETAIL_WINDOWS)
     endif()
     target_link_libraries(TmntIvTurtlesInTimeSNESRecomp PRIVATE comdlg32 shell32)
 endif()
+

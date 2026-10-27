@@ -16,10 +16,17 @@
 #include "crc32.h"
 #include "snapshot_guard.h"
 #include "desktop/config.h"
+#include "desktop/hd_pack.h"
+#include "desktop/graphics_video.h"
 #include "snes_savestate_menu.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef _WIN32
+#undef HIBYTE
+#include <windows.h>
+#include <psapi.h>
+#endif
 
 static uint32_t pixels[1024*256];
 static void picture(const char *path) {
@@ -54,6 +61,15 @@ static void digest(char out[65]) {
     for(unsigned i=0;i<32;++i) sprintf(out+2*i,"%02x",hash[i]);
 }
 int main(int argc, char **argv) {
+    const char *hd_root=getenv("TMNT_HD_DIAGNOSTICS_ROOT");
+    if(hd_root){
+        ConfigUseGraphicsDefaults();g_config.hd_diagnostics=true;
+        snprintf(g_config.hdpack_dir,sizeof(g_config.hdpack_dir),"%s",hd_root);
+        HdPack_Update();
+    }
+    const char *pack_root=getenv("TMNT_HD_PACK_ROOT");
+    if(pack_root){ConfigUseGraphicsDefaults();g_config.hdpack_enabled=true;
+        snprintf(g_config.hdpack_dir,sizeof(g_config.hdpack_dir),"%s",pack_root);HdPack_Update();}
     if(argc==2 && !strcmp(argv[1],"keys")) {
         ConfigUsePersistentSaveDefaults();
         FILE *config=fopen("save-key-test.ini","w");if(!config) return 30;
@@ -115,6 +131,17 @@ int main(int argc, char **argv) {
         frames(action,0x82 | (two ? (0x82<<12) : 0));
         if(!RtlSaveSnapshot(argv[3])) return 8;
     } else if(!RtlLoadSnapshot(argv[3])) return 9;
+    if(getenv("TMNT_HD_BENCH")){
+        frames(60,0);uint64_t start=SDL_GetPerformanceCounter();frames(600,0x82);
+        double ms=1000.0*(SDL_GetPerformanceCounter()-start)/SDL_GetPerformanceFrequency()/600;
+        printf("CPU runtime+raster=%.3f ms/frame; trace=%d\n",ms,pack_root!=NULL||hd_root!=NULL);
+#ifdef _WIN32
+        PROCESS_MEMORY_COUNTERS_EX memory={0};memory.cb=sizeof(memory);
+        if(K32GetProcessMemoryInfo(GetCurrentProcess(),(PROCESS_MEMORY_COUNTERS*)&memory,sizeof(memory)))
+            printf("working_set=%llu private_commit=%llu bytes\n",(unsigned long long)memory.WorkingSetSize,(unsigned long long)memory.PrivateUsage);
+#endif
+        return 0;
+    }
     /* Reject corrupt and wrong-ROM/schema envelopes before touching gameplay. */
     size_t bytes=RtlSaveSnapshotToMemory(NULL,0);
     uint8_t *invalid=malloc(bytes); if(!invalid) return 24;
@@ -151,6 +178,11 @@ int main(int argc, char **argv) {
     snes_savestate_menu_close();digest(menu_after);
     if(strcmp(menu_before,menu_after)) return 41;
     puts("PASS: open/navigate/render/cancel overlay preserves complete machine and visible frame");
+    GraphicsMenu_Open();GraphicsMenu_Key(SDLK_DOWN,0);GraphicsMenu_Key(SDLK_RIGHT,0);
+    if(!GraphicsMenu_Image(&panel,&pw,&ph)||pw!=512||ph!=448)return 42;
+    GraphicsMenu_Key(SDLK_ESCAPE,0);digest(menu_after);
+    if(GraphicsMenu_IsOpen()||strcmp(menu_before,menu_after))return 43;
+    puts("PASS: graphics panel changes presentation only; complete guest/frame unchanged");
     unsigned checkpoint_pc=snes_beam_frame_driver_resume_pc();
     bool suspended=checkpoint_pc>=0x8174 && checkpoint_pc<0x8400 && g_cpu.S<0x1dff;
     if(writing) picture("checkpoint.ppm");
