@@ -1,145 +1,109 @@
-# TMNT IV Turtles in Time Recomp
+# TMNT IV: Turtles in Time Recomp
 
-A native recompilation of **TMNT IV Turtles in Time** (USA), built on
-[snesrecomp](https://github.com/RetroPortingToolKit/snesrecomp).
+Recompilação nativa para PC de **Teenage Mutant Ninja Turtles IV: Turtles in Time** (versão USA), baseada no framework [SNESRecomp](https://github.com/RetroPortingToolKit/snesrecomp).
 
-Native PC recompilation of Teenage Mutant Ninja Turtles IV: Turtles in Time (SNES), featuring classic arcade-style beat 'em up action and local 2-player co-op.
+O projeto recria o jogo para Windows e oferece modo cooperativo local para dois jogadores.
 
+> **É necessário possuir legalmente uma cópia do jogo.** Este repositório e seus lançamentos não incluem dados da ROM. O código recompilado é gerado localmente a partir da ROM do próprio usuário e não é enviado ao repositório.
 
+## Instalador para Windows
 
-> **You must legally own a copy of the game.** No ROM data is distributed with
-> this project, in the repository or in any release. The recompiled C is
-> generated locally from your own copy and is never committed.
+[**Baixar o instalador Windows v1.0.1 — Save Game**](https://github.com/emanuelcnjunior/TMNT-IV-Turtles-in-Time-PC-Recomp/releases/download/v1.0.1/TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.1.exe)
 
-## Windows installer
+Consulte as [notas e o checksum da versão 1.0.1](installer/RELEASE-v1.0.1.md). A interface completa de gerenciamento de saves no launcher ainda está parcial. A versão anterior [v1.0.0](https://github.com/emanuelcnjunior/TMNT-IV-Turtles-in-Time-PC-Recomp/releases/tag/v1.0.0) continua disponível.
 
-[**Download the Windows installer (v1.0.1 ? Save Game)**](https://github.com/emanuelcnjunior/TMNT-IV-Turtles-in-Time-PC-Recomp/releases/download/v1.0.1/TMNT-IV-Turtles-in-Time-PC-Setup-v1.0.1.exe)
+O instalador requer Windows 10 1903 ou superior, 64 bits, e uma ROM USA original do usuário. A ROM não acompanha o instalador; o assistente de instalação valida e importa o arquivo selecionado.
 
-See [v1.0.1 notes and checksum](installer/RELEASE-v1.0.1.md). The save UI Stage 2
-remains partial; this package contains the executable approved by the user.
-[Previous release v1.0.0](https://github.com/emanuelcnjunior/TMNT-IV-Turtles-in-Time-PC-Recomp/releases/tag/v1.0.0) remains available.
+Para instruções de instalação, importação da ROM, compilação e publicação, consulte [installer/README.md](installer/README.md). A ROM validada fica em LocalAppData, fora da pasta de instalação.
 
-Requires Windows 10 1903+ x64 and your own original USA ROM, selected during
-installation. The ROM is not included. [Release notes and SHA-256](https://github.com/emanuelcnjunior/TMNT-IV-Turtles-in-Time-PC-Recomp/releases/latest).
+## Configurações gráficas
 
-For the end-user Windows installer, ROM import, build and GitHub release instructions,
-see [installer/README.md](installer/README.md). Retail builds store the verified ROM
-in LocalAppData and require no development tools on the player machine.
+O jogo inicia em tela cheia, preenchendo a tela widescreen. Isso estica a imagem SNES 4:3 para preencher 16:9; no menu de gráficos, desative **WIDE FILL / PREENCHER** para preservar a proporção 4:3 sem distorção.
 
-## Status
+O modo HD usa upscale pela GPU e começa com o filtro **Scale 2x**. Ele melhora a apresentação dos pixels, mas não inclui texturas remasterizadas. Pacotes HD externos são opcionais e devem conter recursos autorais ou autorizados.
 
-The Windows retail installer and ROM import flow are implemented. Automated
-validation covers ROM identity, installation, removal, preserved data and a
-boot after reinstall. See [test results](installer/TEST-RESULTS.md) for the
-scope and remaining clean-machine release checks. Boot validation does not
-establish complete gameplay compatibility.
+- **F6** ou **Start** em qualquer controle alterna instantaneamente entre Original e HD. Start continua funcionando normalmente no jogo.
+- **F10** abre o menu de gráficos, onde é possível escolher Original/HD, filtro, escala, proporção, VSync, janela ou tela cheia e pacote HD.
+- A comparação em tela dividida foi removida.
 
-## ROM identity
+## Atalhos de salvamento
 
-| | |
+- **F1** ou **LT/L2**: Quick Save.
+- **F2** ou **RT/R2**: Quick Load.
+- **Ctrl+L** abre o launcher durante o jogo; em **Settings > Hotkeys** é possível reconfigurar os atalhos de teclado.
+- Os saves ficam em `%LOCALAPPDATA%\TMNTIVRecomp\saves\`.
+
+O sistema oferece cinco slots manuais e um slot rápido. Os estados são vinculados à identidade da ROM e à versão do formato. Consulte o [relatório de validação de saves](SAVE-GAME-REPORT.md) para os resultados e limitações dos testes.
+
+## Situação do projeto
+
+O instalador Windows e a importação/validação da ROM estão implementados. A validação automatizada cobre identidade da ROM, instalação, remoção, preservação de dados e inicialização após reinstalação. Veja [os resultados dos testes](installer/TEST-RESULTS.md) e seus limites: validar a inicialização não comprova compatibilidade completa de gameplay.
+
+## Identidade da ROM
+
+| Campo | Valor |
 |---|---|
-| File | `Teenage Mutant Ninja Turtles IV - Turtles in Time (USA).sfc` |
-| Publisher | Konami |
-| Developer | Konami |
-| Year | 1992 |
-| Mapping | lorom |
-| Region | USA (North America) |
-| Coprocessor | none |
+| Arquivo | `Teenage Mutant Ninja Turtles IV - Turtles in Time (USA).sfc` |
+| Publicadora | Konami |
+| Desenvolvedora | Konami |
+| Ano | 1992 |
+| Mapeamento | lorom |
+| Região | USA (América do Norte) |
+| Coprocessador | nenhum |
 | CRC32 | `5940bd99` |
 | SHA-256 | `5b82cdd6f2da56f43680d6a5021faebe2e06036d30602c1a7917aa414cf8b5f4` |
 
-`tools/regen.sh` refuses to run against anything else, so a mismatched
-revision fails immediately instead of producing subtly wrong output.
+`tools/regen.sh` recusa qualquer ROM que não corresponda a essa identidade.
 
-## Build
+## Compilação
 
 ```sh
 git submodule update --init --recursive
-bash tools/regen.sh --rom /path/to/Teenage Mutant Ninja Turtles IV - Turtles in Time (USA).sfc
+bash tools/regen.sh --rom "/caminho/para/Teenage Mutant Ninja Turtles IV - Turtles in Time (USA).sfc"
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j
 ```
 
-The ROM does not have to live in the repository — keeping it on your own
-drive is the better habit, and `SNESRECOMP_ROM` sets the path once for a
-shell. Without either, `tools/regen.sh` finds `Teenage Mutant Ninja Turtles IV - Turtles in Time (USA).sfc` at the repo root,
-then the path the setup wizard recorded in `rom.cfg`; `.gitignore` blocks
-both from ever being committed.
+A ROM pode ficar fora do repositório. Defina `SNESRECOMP_ROM` para informar o caminho. Sem essa variável, `tools/regen.sh` procura o arquivo na raiz do projeto e, depois, no caminho gravado em `rom.cfg`. O `.gitignore` impede que a ROM e esse arquivo local sejam enviados ao Git.
 
-`tools/regen.sh` verifies the ROM, generates `src/gen/*.c`, and re-syncs
-`recomp/funcs.h`. Re-run it whenever you change anything under `recomp/`.
+O script valida a ROM, gera `src/gen/*.c` e sincroniza `recomp/funcs.h`. Execute-o novamente ao alterar arquivos em `recomp/`.
 
-## Run
+## Execução
 
 ```sh
-./build/TmntIvTurtlesInTimeSNESRecomp                     # launcher picks the ROM
-./build/TmntIvTurtlesInTimeSNESRecomp /path/to/Teenage Mutant Ninja Turtles IV - Turtles in Time (USA).sfc # or name it and skip the launcher
+./build/TmntIvTurtlesInTimeSNESRecomp
+./build/TmntIvTurtlesInTimeSNESRecomp "/caminho/para/Teenage Mutant Ninja Turtles IV - Turtles in Time (USA).sfc"
 ```
 
-With no ROM on the command line the build opens the recomp-ui launcher: a ROM
-picker with a verification badge, plus display / audio / input settings. Your
-choice is cached in `rom.cfg` beside the executable, so the next launch opens
-on it and "Skip launcher on boot" makes it immediate. If the launcher is not
-built in (`--no-recomp-ui`), the host falls back to a native file picker.
+Sem caminho de ROM na linha de comando, o launcher abre um seletor com verificação da ROM e configurações de vídeo, áudio e controles. A escolha fica salva em `rom.cfg` ao lado do executável. Se o launcher não estiver incluído na compilação (`--no-recomp-ui`), o host usa o seletor de arquivos nativo.
 
-Either way the ROM is checked against the digests above before anything boots
-— a dump that could not have produced this build is refused at the door rather
-than mis-executing ten frames in.
+A ROM é conferida pelos hashes acima antes da execução. Uma cópia incompatível é recusada.
 
-## Layout
+## Estrutura do repositório
 
-| Path | What lives there |
+| Caminho | Conteúdo |
 |---|---|
-| `recomp/` | Analysis input: `bank*.cfg`, `symbols.toml`, generated `funcs.h` |
-| `rom_identity.txt` | ROM digests — read by the build, `tools/regen.sh` and CI |
-| `src/` | Host code you own: `main.c`, `game_rtl.c` |
-| `src/gen/` | Generated C. Never committed — regenerate locally |
-| `snesrecomp/` | Framework submodule (owns `lib/recomp-net`, `lib/retcomm-rbengine`) |
-| `tools/` | `regen.sh` — the ROM → C pipeline |
-| `scripts/` | `package_release.sh` — player-facing zip |
-| `framework_pins.txt` | Exact framework commits this project was scaffolded against |
+| `recomp/` | Entradas de análise: `bank*.cfg`, `symbols.toml` e `funcs.h` gerado |
+| `rom_identity.txt` | Identidade da ROM usada pelo build, pelo script de geração e pelo CI |
+| `src/` | Código do host específico deste projeto |
+| `src/gen/` | Código C gerado localmente; não é enviado ao repositório |
+| `snesrecomp/` | Submódulo do framework SNESRecomp |
+| `recomp-ui/` | Submódulo da interface do launcher |
+| `tools/` | Script `regen.sh`, que gera o código a partir da ROM |
+| `scripts/` | Ferramentas de empacotamento |
+| `framework_pins.txt` | Revisões do framework usadas como base pelo projeto |
 
-## Porting from here
+## Diretrizes para a recompilação
 
-The scaffold stops where the game-specific work starts. In rough order:
+1. O driver de quadros específico do jogo está em `src/game_rtl.c` e usa o driver alinhado ao feixe de vídeo do framework.
+2. Identifique rotinas em `recomp/symbols.toml` e execute `tools/regen.sh` para sincronizar a análise.
+3. Resolva destinos indiretos não identificados antes de promover funções para recompilação AOT.
+4. Não invente resultados para contornar código não analisado e não edite `src/gen/` manualmente. Corrija a configuração ou o framework e gere novamente.
 
-1. **Make it boot.** `src/game_rtl.c` holds the frame driver. It starts on
-   the framework's beam-aligned driver (`snesrecomp/runner/src/beam_frame_driver.h`):
-   one frame per PPU field, interrupts taken where the beam latches them,
-   the field rasterized from the raster journal. A title whose main loop it
-   does not fit replaces those calls with its own driver.
-2. **Name things.** Add entries to `recomp/symbols.toml` as you identify
-   routines, then re-run `tools/regen.sh`. Set `emit = true` to promote one
-   into ahead-of-time analysis; leave it false to keep it interpreted.
-   Regen synchronizes the marked blocks in each bank cfg, creating missing
-   configs. Only proven variants become AOT code. See `recomp/README.md`.
-3. **Resolve dispatch misses.** After every run, deal with unresolved
-   indirect targets before anything else — they are the reason a port
-   diverges, and they are cheap to fix early.
-4. **Never synthesise a result** to get past uncovered code, and never edit
-   `src/gen/` by hand. Fix the config or the framework and regenerate.
+## Multijogador
 
-## Multiplayer
+Dois jogadores locais, um controle por jogador.
 
-Two players, one controller per port.
+## Licença
 
-## Save states (development branch)
-
-Windows saves use `%LOCALAPPDATA%\TMNTIVRecomp\saves\`: five manual slots
-and a separate quick slot. F5 saves, F9 loads, and F11 opens the paused save
-browser (Select+R on a controller). Manual overwrites require confirmation.
-`[KeyMap] QuickSave`, `QuickLoad` and `SaveStateMenu` in `config.ini` can rebind
-these commands; the legacy numbered Load/Save lists are inactive in this profile.
-
-These states are tied to the ROM and runtime schema. See the
-[validation report](SAVE-GAME-REPORT.md) for proven restoration tests and the
-remaining clean Release, installed-executable and Windows-reboot checks. A
-separately named `1.0.1-savegame-test.1` installer is available locally for
-validation; the stable v1.0.0 package is preserved.
-
-## License
-
-This project's own source is under the license in `LICENSE`. The framework
-carries its own terms — see `snesrecomp/LICENSE` and
-`snesrecomp/THIRD_PARTY_ATTRIBUTION.md`. Neither covers the game data, which
-is not distributed here.
+O código deste projeto segue a licença em [LICENSE](LICENSE). O framework possui seus próprios termos; consulte `snesrecomp/LICENSE` e `snesrecomp/THIRD_PARTY_ATTRIBUTION.md`. Essas licenças não abrangem os dados do jogo, que não são distribuídos aqui.
