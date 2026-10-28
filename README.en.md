@@ -2,6 +2,16 @@
 
 [**🇧🇷 Português**](README.md) | [**🇺🇸 English**](README.en.md)
 
+<div align="center">
+
+![TMNT IV: Turtles in Time logo](docs/screenshots/Logo%20Arcade%20Tartarugas%20Ninja%20IV.png)
+
+**The Super Nintendo classic, playable on Windows.**
+
+![Turtles in Time promotional artwork](docs/screenshots/Tartarugas%20em%20A%C3%A7%C3%A3o%20pelo%20Tempo.png)
+
+</div>
+
 A Windows port of **Teenage Mutant Ninja Turtles IV: Turtles in Time** (SNES, USA version), built with [SNESRecomp](https://github.com/emanuelcnjunior/snesrecomp-tmnt4). Features **local two-player co-op** and a Windows installer that validates your ROM.
 
 > **ROM not included.** You must provide your own compatible USA copy. This is an unofficial project not affiliated with Konami, Nintendo, or the Teenage Mutant Ninja Turtles rights holders.
@@ -20,6 +30,14 @@ A Windows port of **Teenage Mutant Ninja Turtles IV: Turtles in Time** (SNES, US
 The source filename may differ: **SHA-256 is used to verify the actual contents**, and a valid ROM is stored under its canonical filename. Other regions, modified dumps, and copier-header ROMs are rejected.
 
 [All releases](https://github.com/emanuelcnjunior/TMNT-IV-Turtles-in-Time-PC-Recomp/releases) · [v1.0.2 release notes and checksums](installer/RELEASE-v1.0.2.md) · [Detailed installer guide (Portuguese)](installer/README.md)
+
+## 🎨 Promotional artwork
+
+The following illustrations were created to showcase the project. **These are promotional images, not in-game screenshots or examples of HD filtering.** Actual gameplay captures appear in the Classic/HD comparison below.
+
+| Time travel | Action across eras |
+|:---:|:---:|
+| ![Promotional artwork: time travel](docs/screenshots/Tartarugas%20Ninja_%20Viagem%20no%20Tempo.png) | ![Promotional artwork: turtles in action](docs/screenshots/Tartarugas%20em%20A%C3%A7%C3%A3o%20pelo%20Tempo.png) |
 
 ## 🎮 Controls and features
 
