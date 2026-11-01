@@ -1,0 +1,68 @@
+name: Build Linux setup pack
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [linux-release]
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ninja-build libgl1-mesa-dev libasound2-dev libpulse-dev libudev-dev libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev libxtst-dev libwayland-dev libxkbcommon-dev libdecor-0-dev zip patchelf xvfb
+      - name: Configure Linux launcher
+        run: >-
+          cmake -S . -B build-linux -G Ninja
+          -DCMAKE_BUILD_TYPE=Release
+          -DSNESRECOMP_SETUP_HOST=ON
+          -DCMAKE_BUILD_RPATH='$ORIGIN'
+      - name: Build Linux launcher
+        run: cmake --build build-linux --parallel 2
+      - name: Package launcher and native recompiler
+        run: |
+          bash scripts/package_release.sh build-linux linux-x64
+          cd dist
+          sha256sum *.zip > SHA256SUMS-linux.txt
+      - name: Verify packaged executable and launcher
+        run: |
+          set -euo pipefail
+          mkdir build-linux/check
+          unzip -q dist/tmnt4recomp-*-linux-x64.zip -d build-linux/check
+          pack=$(find build-linux/check -mindepth 1 -maxdepth 1 -type d)
+          file "$pack/TmntIvTurtlesInTimeSNESRecomp"
+          ldd "$pack/TmntIvTurtlesInTimeSNESRecomp" | tee build-linux/dependencies.txt
+          ! grep -q 'not found' build-linux/dependencies.txt
+          cd "$pack"
+          set +e
+          SDL_AUDIODRIVER=dummy timeout 20s xvfb-run -a ./TmntIvTurtlesInTimeSNESRecomp > launcher-smoke.log 2>&1
+          result=$?
+          set -e
+          cat launcher-smoke.log
+          # A launcher waiting for user input is expected to reach the timeout.
+          test "$result" -eq 124
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tmnt4-linux-x64-setup
+          path: |
+            dist/*.zip
+            dist/SHA256SUMS-linux.txt
+            build-linux/dependencies.txt
+            build-linux/check/**/launcher-smoke.log
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: linux-build-diagnostics
+          path: |
+            build-linux/CMakeFiles/CMakeConfigureLog.yaml
+            build-linux/check/**/launcher-smoke.log
