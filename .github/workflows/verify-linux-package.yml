@@ -1,0 +1,71 @@
+name: Verify playable Linux package
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Draft release containing the Linux archive
+        default: v1.0.2-linux-preview
+        required: true
+        type: string
+  push:
+    branches: [linux-release]
+    paths: [.github/workflows/verify-linux-package.yml, scripts/smoke_linux.sh]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-22.04
+    # GitHub hides draft releases from tokens without repository write access.
+    # This job only reads release assets; it never publishes or uploads them.
+    permissions:
+      contents: write
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      RELEASE_TAG: ${{ inputs.release_tag || 'v1.0.2-linux-preview' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download native package (no ROM or private sources)
+        run: |
+          mkdir -p package evidence
+          gh release download "$RELEASE_TAG" --pattern '*linux-x86_64.tar.gz*' --dir package
+          cd package
+          sha256sum --check *.sha256
+          tar -xzf *.tar.gz
+      - name: Install display test tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb xdotool x11-utils imagemagick libgl1-mesa-dri libgl1
+      - name: Verify ELF, runtime libraries and manifest
+        run: |
+          set -euo pipefail
+          pack=$(find package -mindepth 1 -maxdepth 1 -type d)
+          file "$pack/TmntIvTurtlesInTimeSNESRecomp" | tee evidence/executable.txt
+          readelf -h -d --version-info "$pack/TmntIvTurtlesInTimeSNESRecomp" > evidence/elf.txt
+          ldd "$pack/TmntIvTurtlesInTimeSNESRecomp" | tee evidence/dependencies.txt
+          ! grep -q 'not found' evidence/dependencies.txt
+          python3 - "$pack" <<'PY'
+          import hashlib, json, pathlib, sys
+          root = pathlib.Path(sys.argv[1]).resolve()
+          for entry in json.loads((root / 'manifest.json').read_text()):
+              path = (root / entry['path']).resolve()
+              assert path.is_relative_to(root), entry['path']
+              assert path.stat().st_size == entry['bytes'], entry['path']
+              assert hashlib.sha256(path.read_bytes()).hexdigest() == entry['sha256'], entry['path']
+          assert not any(p.suffix.lower() in {'.sfc', '.smc', '.rom', '.c', '.cpp', '.h', '.py', '.rs'} for p in root.rglob('*'))
+          print('Package manifest and source/ROM exclusions verified.')
+          PY
+      - name: Open and capture the actual packaged launcher
+        run: |
+          pack=$(find package -mindepth 1 -maxdepth 1 -type d)
+          xvfb-run -a -s '-screen 0 1920x1080x24' bash scripts/smoke_linux.sh "$pack" evidence
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: linux-playable-package-verification
+          path: evidence/
+          if-no-files-found: error
