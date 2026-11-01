@@ -2,6 +2,11 @@ name: Build Linux setup pack
 
 on:
   workflow_dispatch:
+    inputs:
+      include_sources:
+        description: 'Include private framework sources in the downloadable setup pack'
+        type: boolean
+        default: false
   push:
     branches: [linux-release]
 
@@ -14,8 +19,19 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+      - name: Read framework pin
+        id: framework
+        run: echo "sha=$(git rev-parse HEAD:snesrecomp)" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
         with:
+          repository: emanuelcnjunior/snesrecomp-tmnt4
+          ref: ${{ steps.framework.outputs.sha }}
+          path: snesrecomp
+          ssh-key: ${{ secrets.LINUX_FRAMEWORK_READ_KEY }}
+          persist-credentials: false
           submodules: recursive
+      - name: Initialize launcher submodule
+        run: git submodule update --init --recursive recomp-ui
       - name: Install build dependencies
         run: |
           sudo apt-get update -qq
@@ -29,11 +45,13 @@ jobs:
       - name: Build Linux launcher
         run: cmake --build build-linux --parallel 2
       - name: Package launcher and native recompiler
+        if: github.event_name == 'workflow_dispatch' && inputs.include_sources
         run: |
           bash scripts/package_release.sh build-linux linux-x64
           cd dist
           sha256sum *.zip > SHA256SUMS-linux.txt
       - name: Verify packaged executable and launcher
+        if: github.event_name == 'workflow_dispatch' && inputs.include_sources
         run: |
           set -euo pipefail
           mkdir build-linux/check
@@ -51,6 +69,7 @@ jobs:
           # A launcher waiting for user input is expected to reach the timeout.
           test "$result" -eq 124
       - uses: actions/upload-artifact@v4
+        if: github.event_name == 'workflow_dispatch' && inputs.include_sources
         with:
           name: tmnt4-linux-x64-setup
           path: |
@@ -59,6 +78,19 @@ jobs:
             build-linux/dependencies.txt
             build-linux/check/**/launcher-smoke.log
           if-no-files-found: error
+      - name: Verify launcher without distributing framework sources
+        if: github.event_name != 'workflow_dispatch' || !inputs.include_sources
+        run: |
+          set -euo pipefail
+          cd build-linux
+          ldd ./TmntIvTurtlesInTimeSNESRecomp | tee dependencies.txt
+          ! grep -q 'not found' dependencies.txt
+          set +e
+          SDL_AUDIODRIVER=dummy timeout 20s xvfb-run -a ./TmntIvTurtlesInTimeSNESRecomp > launcher-smoke.log 2>&1
+          result=$?
+          set -e
+          cat launcher-smoke.log
+          test "$result" -eq 124
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
@@ -66,3 +98,4 @@ jobs:
           path: |
             build-linux/CMakeFiles/CMakeConfigureLog.yaml
             build-linux/check/**/launcher-smoke.log
+            build-linux/launcher-smoke.log
