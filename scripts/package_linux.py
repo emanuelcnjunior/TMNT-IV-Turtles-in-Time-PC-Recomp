@@ -125,7 +125,8 @@ def main() -> None:
         archive = dist / (name + ".tar.gz")
         with tarfile.open(archive, "w:gz") as tar:
             tar.add(stage, arcname=name, filter=permissions)
-    archive.with_suffix(archive.suffix + ".sha256").write_text(f"{digest(archive)}  {archive.name}\n", encoding="ascii")
+    archive.with_suffix(archive.suffix + ".sha256").write_text(
+        f"{digest(archive)}  {archive.name}\n", encoding="ascii", newline="\n")
     print(archive)
 
 
